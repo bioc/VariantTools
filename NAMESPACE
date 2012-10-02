@@ -1,6 +1,7 @@
 import(BiocGenerics)
 import(IRanges)
 import(GenomicRanges)
+importFrom(parallel, mclapply, mcmapply)
 importFrom(Biostrings, DNAStringSet, detail)
 importFrom(Rsamtools, BamFile)
 importFrom(GenomicFeatures, cdsBy, exonsBy, transcriptLocs2refLocs)
