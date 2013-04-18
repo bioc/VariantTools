@@ -37,8 +37,8 @@ variantGR2Vcf <- function(x, sample.id, project = NULL,
   }
 
   posFactor <- rep(seq_len(length(x)), 2)
-  alleleDepth <- c(x$count.ref, x$count)
-  allelePresent <- as.integer(c(x$count.ref > 0, x$count > 0L))
+  alleleDepth <- c(refCount(x), altCount(x))
+  allelePresent <- as.integer(c(refCount(x) > 0, altCount(x) > 0L))
 
   geno <-
     SimpleList(AD = genoMatrix(split(alleleDepth, posFactor)),
