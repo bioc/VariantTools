@@ -1,7 +1,32 @@
 ## TODO: use dispatch on special file classes
+file_ext_sans_gz <- function(x) {
+  x <- sub("[.]gz$", "", x)
+  file_ext(x)
+}
+
+## HACK: just for ID verify to work with GATK output
+vcf2VariantGRanges <- function(from) {
+  multi.alt <- elementLengths(alt(from)) > 1L
+  from <- from[!multi.alt]
+  rd <- rowData(from)
+  ref <- as.character(rd$REF)
+  alt <- as.character(unlist(rd$ALT))
+  ad <- geno(from)$AD
+  ad.m <- matrix(unlist(ad), 2)
+  high.quality.ref <- ad.m[1,]
+  high.quality <- ad.m[2,]
+  GRanges(seqnames(rd), ranges(rd), "+", ref, alt,
+          high.quality, high.quality.ref,
+          location = paste0(seqnames(rd), ":", start(rd)))
+}
+readVariantGRangesFromVCF <- function(x, ...) {
+  vcf <- readVcf(x, ...)
+  vcf2VariantGRanges(vcf)
+}
+
 loadVariants <- function(x, ...) {
-  if (file_ext(x) == "vcf")
-    readVcf(x, ...)
+  if (file_ext_sans_gz(x) == "vcf")
+    readVariantGRangesFromVCF(x, ...)
   else get(load(x))
 }
 
@@ -10,7 +35,7 @@ calculateConcordanceMatrix <- function(variantFiles, ...) {
     stop("There must at least two variant files.")
   }
   if (!all(file.exists(variantFiles))) {
-    stop("Some of the files of variants could not be found.")
+    stop("Some of the files could not be found.")
   }
   
   ## initialize vcmat, pairwise variance concordant score between dirs
@@ -24,8 +49,7 @@ calculateConcordanceMatrix <- function(variantFiles, ...) {
       loadVariants(variantFiles[i], ...)
     }, silent=TRUE)
     if (class(avar) == "try-error") {
-      stop("error: cannot load filtered_variants_granges in ",
-           variantFiles[i])
+      stop("error: cannot load '", variantFiles[i], "': ", avar)
     }
   
     for (j in (i+1):n) {
@@ -33,15 +57,11 @@ calculateConcordanceMatrix <- function(variantFiles, ...) {
         loadVariants(variantFiles[j], ...)
       }, silent=TRUE)
       if (class(bvar) == "try-error") {
-        stop("error: cannot load filtered_variants_granges in ",
-             variantFiles[j])
+        stop("error: cannot load '", variantFiles[j], "': ", bvar)
       }
     
       ## compute variant concordance
-      vc <- try(calculateVariantConcordance(avar, bvar))
-      if (class(vc) == "try-error") {
-        stop("error: variantConcordance() didn't return a value")
-      }
+      vc <- calculateVariantConcordance(avar, bvar)
 
       ## output results
       vcmat[i, i] <- 1

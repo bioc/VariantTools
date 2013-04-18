@@ -42,8 +42,8 @@ callVariantConcordance(concordanceMatrix, threshold)
 
   The \code{calculateConcordanceMatrix} function generates a numeric
   matrix with the concordance for each pair of samples. It accepts paths
-  to serialized objects so that all variant calls are not loaded in
-  memory at once. This probably should support VCF files, eventually.
+  to serialized objects or VCF files so that all variant calls are not
+  loaded in memory at once.
 
   The \code{callVariantConcordance} function generates a
   concordant/non-concordant/undecidable status for each sample (that are
@@ -63,5 +63,5 @@ callVariantConcordance(concordanceMatrix, threshold)
   \code{callVariantConcordance}.
 }
 \author{
-  Cory Barr (code), Michael Lawrence (inferred documentation)
+  Michael Lawrence (inferred documentation, new code), Cory Barr (original code)
 }
