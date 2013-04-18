@@ -15,7 +15,7 @@ calculateVariantConcordance <- function(gr1, gr2, which = NULL) {
   test2 <-gr2[subjectHits(overlaps)]
 
   callHetHom <- function(x) {
-    ifelse(x$count.ref > 2,
+    ifelse(x$high.quality.ref > 2,
            paste0(as.character(x$ref), as.character(x$alt)),
            paste0(as.character(x$alt), as.character(x$alt)))
   }
