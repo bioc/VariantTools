@@ -42,7 +42,7 @@ variantGR2Vcf <- function(x, sample.id, project = NULL,
 
   geno <-
     SimpleList(AD = genoMatrix(split(alleleDepth, posFactor)),
-               DP = genoMatrix(x$count.total),
+               DP = genoMatrix(totalCount(x)),
                AP = genoMatrix(split(as.integer(allelePresent), posFactor)))
 
   VCF(rowData = rowData, colData = colData, exptData = exptData, fixed = fixed,
