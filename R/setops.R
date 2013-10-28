@@ -1,6 +1,7 @@
 variantKeys <- function(x) paste0(x$location, x$alt)
 
 matchVariants <- function(x, table) {
+  .Deprecated("match,VRanges,VRanges")
   hits <- findOverlaps(x, table)
   same.alt <- x$alt[queryHits(hits)] == table$alt[subjectHits(hits)]
   ans <- rep(NA, length(x))
@@ -19,6 +20,7 @@ setGeneric("%variant_in%", function(x, table) standardGeneric("%variant_in%"))
 
 setMethod("%variant_in%", c("GenomicRanges", "GenomicRanges"),
           function(x, table) {
+            .Deprecated("%in%,VRanges,VRanges")
             !is.na(matchVariants(x, table))
           })
 
