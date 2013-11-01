@@ -62,7 +62,8 @@ setMethod("callSampleSpecificVariants", c("GenomicRanges", "GenomicRanges"),
                    post.filters = FilterRules(),
                    ...)
           {
-            variantGRangesIsDeprecated("callSampleSpecificVariants")
+            stop("callSampleSpecificVariants no longer supports variant ",
+                 "GRanges: please use VRanges instead")
             case.called <- callVariants(case, calling.filters, post.filters)
             control <- makeVRangesFromVariantGRanges(control, genome(control))
             filters <- SampleSpecificVariantFilters(control,
@@ -121,7 +122,7 @@ SampleSpecificVariantFilters <-
 
 SetdiffVariantsFilter <- function(other) {
   function(x) {
-    !(x %variant_in% other)
+    !(x %in% other)
   }
 }
 

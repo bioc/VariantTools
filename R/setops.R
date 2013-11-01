@@ -2,6 +2,8 @@ variantKeys <- function(x) paste0(x$location, x$alt)
 
 matchVariants <- function(x, table) {
   .Deprecated("match,VRanges,VRanges")
+  if (is.null(x$alt))
+    stop("matchVariants requires an 'alt' metacolumn")
   hits <- findOverlaps(x, table)
   same.alt <- x$alt[queryHits(hits)] == table$alt[subjectHits(hits)]
   ans <- rep(NA, length(x))
