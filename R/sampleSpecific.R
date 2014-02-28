@@ -94,8 +94,8 @@ setMethod("callSampleSpecificVariants", c("BamFile", "BamFile"),
             case.raw <- tallyVariants(case, tally.param)
             case.called <- callVariants(case.raw, calling.filters, post.filters)
 
-            control.raw <- tallyVariants(control, tally.param)
-            control.cov <- coverage(control, drop.D.ranges = TRUE)
+            sbp <- ScanBamParam(which = tally.param@bamTallyParam@which)
+            control.cov <- coverage(control, drop.D.ranges = TRUE, param = sbp)
 
             callSampleSpecificVariants(case.called, control.raw, control.cov,
                                        ...)
